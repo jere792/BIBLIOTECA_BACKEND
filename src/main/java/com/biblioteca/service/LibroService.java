@@ -9,10 +9,12 @@ import com.biblioteca.model.entity.Libro;
 import com.biblioteca.repository.CategoriaRepository;
 import com.biblioteca.repository.LibroRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class LibroService {
 
     private final LibroRepository libroRepository;
@@ -49,6 +51,7 @@ public class LibroService {
         return libroMapper.toResponse(libro);
     }
 
+    @Transactional
     public LibroResponse create(LibroRequest request) {
         Categoria categoria = null;
         if (request.getIdCategoria() != null) {
@@ -61,6 +64,7 @@ public class LibroService {
         return libroMapper.toResponse(libro);
     }
 
+    @Transactional
     public LibroResponse update(Integer id, LibroRequest request) {
         Libro libro = libroRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Libro", id));
@@ -76,6 +80,7 @@ public class LibroService {
         return libroMapper.toResponse(libro);
     }
 
+    @Transactional
     public void delete(Integer id) {
         if (!libroRepository.existsById(id)) {
             throw new ResourceNotFoundException("Libro", id);
