@@ -47,4 +47,21 @@ public class CategoriaController {
     public ResponseEntity<CategoriaResponse> create(@Valid @RequestBody CategoriaRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.create(request));
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar categoría", description = "Actualiza una categoría existente (solo admin)")
+    @ApiResponse(responseCode = "200", description = "Categoría actualizada")
+    @ApiResponse(responseCode = "404", description = "Categoría no encontrada", content = @Content)
+    public ResponseEntity<CategoriaResponse> update(@PathVariable Integer id, @Valid @RequestBody CategoriaRequest request) {
+        return ResponseEntity.ok(categoriaService.update(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar categoría", description = "Elimina una categoría por ID (solo admin)")
+    @ApiResponse(responseCode = "204", description = "Categoría eliminada")
+    @ApiResponse(responseCode = "404", description = "Categoría no encontrada", content = @Content)
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        categoriaService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

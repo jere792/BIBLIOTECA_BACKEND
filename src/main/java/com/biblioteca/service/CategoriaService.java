@@ -40,4 +40,20 @@ public class CategoriaService {
         categoria = categoriaRepository.save(categoria);
         return categoriaMapper.toResponse(categoria);
     }
+
+    public CategoriaResponse update(Integer id, CategoriaRequest request) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria", id));
+        categoria.setNombreCategoria(request.getNombreCategoria());
+        categoria.setDescripcion(request.getDescripcion());
+        categoria = categoriaRepository.save(categoria);
+        return categoriaMapper.toResponse(categoria);
+    }
+
+    public void delete(Integer id) {
+        if (!categoriaRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Categoria", id);
+        }
+        categoriaRepository.deleteById(id);
+    }
 }

@@ -1,5 +1,6 @@
 package com.biblioteca.model.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +22,7 @@ public class RegistroRequest {
     private String dni;
     private String direccion;
 
+    @Schema(description = "Rol del usuario", allowableValues = {"1: CLIENTE", "2: EMPLEADO", "3: ADMIN"}, example = "1")
     @Min(1)
     @Max(3)
     private Integer rol;
