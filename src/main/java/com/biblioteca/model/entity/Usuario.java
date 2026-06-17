@@ -40,6 +40,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario")
     private List<Boleta> boletas;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<Resena> resenas;
+
     public Usuario() {}
 
     public Integer getIdUsuario() { return idUsuario; }
@@ -74,4 +77,7 @@ public class Usuario {
 
     public List<Boleta> getBoletas() { return boletas; }
     public void setBoletas(List<Boleta> boletas) { this.boletas = boletas; }
+
+    public List<Resena> getResenas() { return resenas; }
+    public void setResenas(List<Resena> resenas) { this.resenas = resenas; }
 }

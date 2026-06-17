@@ -60,4 +60,23 @@ public class BoletaController {
     public ResponseEntity<BoletaResponse> findById(@PathVariable Integer id) {
         return ResponseEntity.ok(boletaService.findById(id));
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar boleta", description = "Reemplaza los detalles de una boleta y ajusta el stock (solo admin)")
+    @ApiResponse(responseCode = "200", description = "Boleta actualizada")
+    @ApiResponse(responseCode = "400", description = "Stock insuficiente o datos invalidos", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Boleta no encontrada", content = @Content)
+    public ResponseEntity<BoletaResponse> update(@PathVariable Integer id,
+                                                  @Valid @RequestBody BoletaRequest request) {
+        return ResponseEntity.ok(boletaService.update(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar boleta", description = "Elimina una boleta y restaura el stock (solo admin)")
+    @ApiResponse(responseCode = "204", description = "Boleta eliminada")
+    @ApiResponse(responseCode = "404", description = "Boleta no encontrada", content = @Content)
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        boletaService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }

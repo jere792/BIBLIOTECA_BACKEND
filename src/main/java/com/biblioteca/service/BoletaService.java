@@ -68,7 +68,6 @@ public class BoletaService {
             detalle.setSubtotal(subtotal);
 
             libro.setStock(libro.getStock() - item.getCantidad());
-            libroRepository.save(libro);
 
             detalles.add(detalle);
         }
@@ -90,6 +89,63 @@ public class BoletaService {
         Boleta boleta = boletaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Boleta", id));
         return boletaMapper.toResponse(boleta);
+    }
+
+    @Transactional
+    public BoletaResponse update(Integer id, BoletaRequest request) {
+        Boleta boleta = boletaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Boleta", id));
+
+        for (DetalleBoleta detalle : boleta.getDetalles()) {
+            detalle.getLibro().setStock(detalle.getLibro().getStock() + detalle.getCantidad());
+        }
+
+        List<DetalleBoleta> nuevosDetalles = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (var item : request.getDetalles()) {
+            Libro libro = libroRepository.findById(item.getIdLibro())
+                    .orElseThrow(() -> new ResourceNotFoundException("Libro", item.getIdLibro()));
+
+            if (libro.getStock() < item.getCantidad()) {
+                throw new IllegalArgumentException("Stock insuficiente para: " + libro.getTitulo());
+            }
+
+            BigDecimal subtotal = libro.getPrecio().multiply(BigDecimal.valueOf(item.getCantidad()));
+            total = total.add(subtotal);
+
+            DetalleBoleta detalle = new DetalleBoleta();
+            detalle.setBoleta(boleta);
+            detalle.setLibro(libro);
+            detalle.setCantidad(item.getCantidad());
+            detalle.setPrecioUnitario(libro.getPrecio());
+            detalle.setSubtotal(subtotal);
+
+            libro.setStock(libro.getStock() - item.getCantidad());
+
+            nuevosDetalles.add(detalle);
+        }
+
+        boleta.getDetalles().clear();
+        boleta.getDetalles().addAll(nuevosDetalles);
+        boleta.setTotal(total);
+        boleta = boletaRepository.save(boleta);
+
+        return boletaMapper.toResponse(boleta);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        Boleta boleta = boletaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Boleta", id));
+
+        for (DetalleBoleta detalle : boleta.getDetalles()) {
+            detalle.getLibro().setStock(detalle.getLibro().getStock() + detalle.getCantidad());
+        }
+
+        boleta.getDetalles().clear();
+        boletaRepository.save(boleta);
+        boletaRepository.delete(boleta);
     }
 
     public List<BoletaResponse> findByUsuario(Integer idUsuario) {

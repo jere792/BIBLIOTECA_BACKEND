@@ -41,6 +41,9 @@ public class Libro {
     @OneToMany(mappedBy = "libro")
     private List<DetalleBoleta> detalles;
 
+    @OneToMany(mappedBy = "libro")
+    private List<Resena> resenas;
+
     public Libro() {}
 
     public Integer getIdLibro() { return idLibro; }
@@ -72,4 +75,7 @@ public class Libro {
 
     public List<DetalleBoleta> getDetalles() { return detalles; }
     public void setDetalles(List<DetalleBoleta> detalles) { this.detalles = detalles; }
+
+    public List<Resena> getResenas() { return resenas; }
+    public void setResenas(List<Resena> resenas) { this.resenas = resenas; }
 }
