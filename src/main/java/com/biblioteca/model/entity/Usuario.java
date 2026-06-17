@@ -25,7 +25,7 @@ public class Usuario {
     @Column(length = 100)
     private String apellido;
 
-    @Column(length = 20)
+    @Column(length = 100)
     private String telefono;
 
     @Column(length = 20)

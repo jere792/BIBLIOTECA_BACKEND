@@ -58,7 +58,9 @@ public class AuthService {
         usuario.setTelefono(request.getTelefono());
         usuario.setDni(request.getDni());
         usuario.setDireccion(request.getDireccion());
-        usuario.setRolEnum(RolUsuario.CLIENTE);
+        usuario.setRolEnum(request.getRol() != null
+                ? RolUsuario.fromValue(request.getRol())
+                : RolUsuario.CLIENTE);
 
         usuario = usuarioRepository.save(usuario);
 

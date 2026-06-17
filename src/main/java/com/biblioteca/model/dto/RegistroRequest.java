@@ -1,5 +1,7 @@
 package com.biblioteca.model.dto;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -18,6 +20,10 @@ public class RegistroRequest {
     private String telefono;
     private String dni;
     private String direccion;
+
+    @Min(1)
+    @Max(3)
+    private Integer rol;
 
     public String getUsuario() { return usuario; }
     public void setUsuario(String usuario) { this.usuario = usuario; }
@@ -39,4 +45,7 @@ public class RegistroRequest {
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public Integer getRol() { return rol; }
+    public void setRol(Integer rol) { this.rol = rol; }
 }
